@@ -1,24 +1,56 @@
 import logo from './logo.svg';
 import './App.css';
+import './App.css';
+import { Button } from 'react-bootstrap';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import PrivateRoutes from './Protected/PrivateRoutes';
+import AuthPage from './Pages/Auth/AuthPage.js'
+import AuthPageHome from './Pages/Auth/AuthPageHome.js';
+import AuthPageLogin from './Pages/Auth/AuthPageLogin.js';
+import AuthPageNovaConta from './Pages/Auth/AuthPageNovaConta.js';
+import PrivateRouteAuth from './Protected/PrivateRouteAuth.js';
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <PrivateRoutes />,
+    children:[]
+  
+  },
+
+  {
+    path: "auth",
+    element: <PrivateRouteAuth/>,
+    children:[
+      {
+        path: '',
+        element: <AuthPageHome/>,
+        children:[
+         
+        ]
+      },
+      {
+        path: 'login',
+        element: <AuthPageLogin/>
+      },
+      {
+        path: 'account/new',
+        element: <AuthPageNovaConta/>
+      }
+    ]
+  }
+  
+  
+
+
+]);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <RouterProvider router={router}/>
+    </>
   );
 }
 

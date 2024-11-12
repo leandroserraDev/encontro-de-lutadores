@@ -1,15 +1,10 @@
-import AuthPage from "./AuthPage.js";
-
-import image from '../../fight-png-17964.png'
-
-import imagemLutadores from '../../fight-png-17924.png'
-import { FaInstagramSquare } from "react-icons/fa";
 import '../../input.css';
-import Button from '../../Components/Button.js'
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
+import Footer from "../../Components/Footer/Footer.js";
+import LogoComponent from "../../Components/LogoTelasLoginEmail/LogoComponent.js";
 
 function AuthPageLogin() {
 
@@ -38,17 +33,7 @@ function AuthPageLogin() {
 
                     var decodeToken = jwtDecode(data.data);
 
-
                     localStorage.setItem("token", data.data);
-                    localStorage.setItem("id", decodeToken.sid);
-                    localStorage.setItem("userName", decodeToken.name);
-                    localStorage.setItem("email", decodeToken.email);
-
-
-                    var utcSeconds = decodeToken.exp;
-                    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-                    d.setUTCSeconds(utcSeconds);
-                    localStorage.setItem("expToken", d);
 
                     navigate({ pathname: "/" });
                 }
@@ -63,25 +48,20 @@ function AuthPageLogin() {
         <div className="flex 
         flex-column
         w-full
-        h-full
-        items-center ">
+        items-center 
+        min-h-[568px]
+        max-h-[1280px]">
 
-            <img className="w-50
-            h-40
-            self-center
-            mt-14"
-                src={image} height={50} width={50} />
+            <LogoComponent />
 
-            <div className="  flex flex-col w-full h-[100px] items-center ">
-                <h2 className="mb-[-2px] ">Bem-Vindo</h2>
-                <span className=" text-center text-[7pt] text-gray-400">Encontre seu novo combate</span>
 
-            </div>
 
             <form className="flex 
             flex-col
-            h-[400px]
-            justify-center "
+            h-[350px]
+            justify-center 
+            max-h-[350px]
+            "
 
                 onSubmit={handleSubmit(data => submitData(data))}>
                 <ul className="flex flex-col p-0">
@@ -112,7 +92,7 @@ function AuthPageLogin() {
                             placeholder="E-mail..."
                             type='email'
                             {...register("email",
-                           { required: "Please enter your email." })}
+                                { required: "Please enter your email." })}
                         // custom message
                         />
 
@@ -145,35 +125,45 @@ function AuthPageLogin() {
                     </div>
                 </ul>
 
-                <Button
-                    width={"w-[150px]"}
-                    height={"h-[30px]"}
-                    text={"Login"}
-                    bgColor={"bg-blue-400"}
-                    textColor={"text-white"} 
-                    type="submit" 
-                    class="w-100% 
-                    border
-                    rounded " />
-                <Button
-
-                    funcOnClick={() => back()}
-
-                    width={"w-[150px]"}
-                    height={"h-[30px]"}
-                    text={"Voltar"}
-                    bgColor={"bg-gray-400"}
-                    textColor={"text-white"} 
-                    type="button" 
-                    class="w-100% border rounded " />
+                <button
+                    class="w-[150px]
+                    h-[30px]
+                    Login
+                    bg-blue-400
+                    text-white
+                          hover:scale-105
+                            duration-150
+                            mb-1
+                            self-center 
+                            rounded-full
+                            font-bold 
+                    "
+                    type="submit"
+                > Entrar </button>
+                <button
+                    onClick={() => back()}
+                    className="w-[150px]
+                    h-[30px]
+                    Login
+                    bg-gray-500
+                    text-white
+                          hover:scale-105
+                            duration-150
+                            mb-1
+                            self-center 
+                            rounded-full
+                            font-bold 
+                    "
+                    type="submit"
+                > Voltar </button>
                 {
-                    errorAPI.error 
-                    && 
+                    errorAPI.error
+                    &&
                     errorAPI.error.map((item, index) => {
                         return (
                             <li className='h-[20px]
                             text-red-500'
-                             key={item.id}>
+                                key={item.id}>
                                 <span>
                                     {item.message}
                                 </span>
@@ -182,19 +172,7 @@ function AuthPageLogin() {
                     })
                 }
             </form>
-            <footer className="mt-2
-            p-1 rounded
-            w-full
-            bg-blue-100
-            flex
-            justify-center
-            text-black
-            items-center">
-                <FaInstagramSquare 
-                color='#DD2A7B'
-                size={20}
-                class="hover:scale-105" />
-            </footer>
+            <Footer />
         </div>
 
     )

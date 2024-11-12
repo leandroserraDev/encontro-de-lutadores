@@ -1,47 +1,231 @@
-import AuthPage from "./AuthPage.js";
-
-import image from '../../fight-png-17964.png'
-
-import imagemLutadores from '../../fight-png-17924.png'
-import { FaInstagramSquare } from "react-icons/fa";
 import '../../input.css';
-import Button from '../../Components/Button.js'
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import Footer from "../../Components/Footer/Footer.js";
+import LogoComponent from "../../Components/LogoTelasLoginEmail/LogoComponent.js";
+import { CreateUser } from '../../Services/IdentityService.js'
+import ModalErrorCreateUser from '../../Components/Modals/ModalErrorCreateNewUser.js';
+import identityServiceInstance from "../../Services/IdentityService"
+import Snackbar from '../../Components/Modals/Snackbar/Snackbar.js';
 
 function AuthPageNovaConta() {
+
+    const navigate = useNavigate();
+    const back = () => navigate("/auth");
+    const [openModalError, setOpenModalError] = useState(false);
+    const { register, control, handleSubmit, reset, trigger, setError } = useForm({
+    });
+    const [errorAPI, setErrorAPI] = useState([]);
+
+    async function submitData(data) {
+        var response = await identityServiceInstance.CreateUser(data);
+
+        if (response.success) {
+        }
+        else {
+            setErrorAPI(response);
+            setOpenModalError(true);
+        }
+    }
+
     return (
-        <div className=" flex flex-col w-full h-full">
-            <img className=" w-50 h-40 self-center mt-14" src={image} height={50} width={50} />
+        <div className="flex 
+        flex-column
+        w-full
+        items-center 
+        min-h-[568px]
+        max-h-[1280px]">
 
-            <div className="  flex flex-col w-full  items-center h-[100px]">
-                <h2 className="mb-[-2px] ">Bem-Vindo</h2>
-                <span className=" text-center text-[7pt] text-gray-400">Encontre seu novo combate</span>
+            <LogoComponent />
 
+
+
+            <form className="flex 
+            flex-col
+            h-[350px]
+            justify-center "
+
+                onSubmit={handleSubmit(data => submitData(data))}>
+                <ul className="flex flex-col p-0">
+
+                    <div class="w-full 
+                    max-w-sm
+                    min-w-[200px]">
+
+                        <input class="w-full
+                        bg-transparent
+                        placeholder:text-slate-400
+                        text-slate-700 text-sm border
+                        border-slate-200 
+                        rounded-xl
+                        px-3
+                         transition
+                         duration-300
+                         ease
+                         focus:outline-none
+                         focus:border-slate-400
+                         focus:shadow
+                         shadow-sm
+                         hover:border-slate-300
+                         h-[30px] " placeholder="Nome..."
+                            type='text'
+                            {...register("nome", { required: "Nome é obrigatório." })} // custom message
+                        />
+
+                    </div>
+                    <div class="w-full 
+                    max-w-sm
+                    min-w-[200px]">
+
+                        <input class="w-full
+                        bg-transparent
+                        placeholder:text-slate-400
+                        text-slate-700 text-sm border
+                        border-slate-200 
+                        rounded-xl
+                        px-3
+                         transition
+                         duration-300
+                         ease
+                         focus:outline-none
+                         focus:border-slate-400
+                         focus:shadow
+                         shadow-sm
+                         hover:border-slate-300
+                         h-[30px] " placeholder="Sobrenome..."
+                            type='text'
+                            {...register("sobrenome", { required: "Sobrenome é obrigatório." })} // custom message
+                        />
+
+                    </div>
+
+                    <div class="w-full 
+                    max-w-sm
+                    min-w-[200px]
+                    mb-2">
+
+                        <input class="w-full 
+                        bg-transparent 
+                        placeholder:text-slate-400 
+                        text-slate-700 
+                        text-sm border
+                      border-slate-200
+                        rounded-xl 
+                        px-3
+                        h-[30px]
+                        transition
+                        duration-300
+                        ease
+                        hover:border-slate-300
+                        focus:ring-blue-500
+                        focus:border-blue-500
+                        focus:outline-none
+                        focus:shadow
+                        shadow-sm 
+                        "
+                            placeholder="E-mail..."
+                            type='email'
+                            {...register("email",
+                                { required: "E-mail é obrigatório." })}
+                        // custom message
+                        />
+
+                    </div>
+
+                    <div class="w-full 
+                    max-w-sm
+                    min-w-[200px]">
+
+                        <input class="w-full
+                        bg-transparent
+                        placeholder:text-slate-400
+                        text-slate-700 text-sm border
+                        border-slate-200 
+                        rounded-xl
+                        px-3
+                         transition
+                         duration-300
+                         ease
+                         focus:outline-none
+                         focus:border-slate-400
+                         focus:shadow
+                         shadow-sm
+                         hover:border-slate-300
+                         h-[30px] " placeholder="Password..."
+                            type='password'
+                            {...register("password", { required: "Password é obrigatório." })} // custom message
+                        />
+
+                    </div>
+                </ul>
+
+                <button
+                onClick={() => console.log(openModalError)}
+                    class="w-[150px]
+                    h-[30px]
+                    Login
+                    bg-blue-400
+                    text-white
+                          hover:scale-105
+                            duration-150
+                            mb-1
+                            self-center 
+                            rounded-full
+                            font-bold 
+                    "
+                    type="submit"
+                > Cadastrar </button>
+                <button
+                    onClick={() => back()}
+                    className="w-[150px]
+                    h-[30px]
+                    Login
+                    bg-gray-500
+                    text-white
+                          hover:scale-105
+                            duration-150
+                            mb-1
+                            self-center 
+                            rounded-full
+                            font-bold 
+                    "
+                    type="submit"
+                > Voltar </button>
+
+            </form>
+
+            <Footer />
+            <div className='flex top-0 flex-col absolute '>
+
+                {openModalError &&
+
+
+                   errorAPI.errors.map((item, index) => {
+                    console.log(item)
+                        return ( <div key={index} > <Snackbar open={ openModalError } message={item} timeOut={(index == 0 ? 1 : index + 1) * 2000} /></div>)
+                    })
+
+
+
+
+                }
             </div>
 
-            <div className="flex flex-col h-[400px] justify-center">
-             
-                <Button width={"w-[150px]"}  
-                height={"h-[30px]"} 
-                text={"Entrar"} 
-                bgColor={"bg-blue-400"} 
-                textColor={"text-white"}/>
 
-                <Button 
-                onClick={()=> alert()}
-                  
-                width={"w-[150px]"}  
-                height={"h-[30px]"} 
-                text={"Nova Conta"} 
-                bgColor={"bg-blue-400"} 
-                textColor={"text-white"}/>
-      
+            {/* {openModalError && <ModalErrorCreateUser mensagensError={errorAPI}/>} */}
+            {/* {errorAPI.erros && errorAPI.errors.map((value, index) => {
+                return (
+                    <div key={index}>
+                    <Snackbar  message={value}/>
 
-            </div>
+                        </div>
 
-            <footer className=" mt-2 p-1 rounded  h-[100px] w-full bg-violet-100 flex justify-center text-black  items-center">
-                <FaInstagramSquare color='#DD2A7B' size={20} class="hover:scale-105" />
-            </footer>
+                )
+            })   } */}
         </div>
+
     )
 }
 

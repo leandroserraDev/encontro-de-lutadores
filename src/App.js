@@ -9,9 +9,16 @@ import AuthPageHome from './Pages/Auth/AuthPageHome.js';
 import AuthPageLogin from './Pages/Auth/AuthPageLogin.js';
 import AuthPageNovaConta from './Pages/Auth/AuthPageNovaConta.js';
 import PrivateRouteAuth from './Protected/PrivateRouteAuth.js';
+import ConfirmacaoEmailPage from './Pages/ConfirmacaoEmail/ConfirmacaoEmailPage.js';
 
 
 const router = createBrowserRouter([
+
+  {
+    path:"usuario/confirmar-email/",
+    element: <ConfirmacaoEmailPage/>
+
+  },
   {
     path: "/",
     element: <PrivateRoutes />,

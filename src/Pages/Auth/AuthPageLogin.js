@@ -9,7 +9,7 @@ import LogoComponent from "../../Components/LogoTelasLoginEmail/LogoComponent.js
 function AuthPageLogin() {
 
     const navigate = useNavigate();
-    const back = () => navigate("/auth");
+    const back = () => navigate("/identity");
     const { register, control, handleSubmit, reset, trigger, setError } = useForm({
     });
     const [errorAPI, setErrorAPI] = useState([]);

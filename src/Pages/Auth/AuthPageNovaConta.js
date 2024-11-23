@@ -9,25 +9,46 @@ import { CreateUser } from '../../Services/IdentityService.js'
 import ModalErrorCreateUser from '../../Components/Modals/ModalErrorCreateNewUser.js';
 import identityServiceInstance from "../../Services/IdentityService"
 import Snackbar from '../../Components/Modals/Snackbar/Snackbar.js';
+import SnackbarHome from '../../Components/Modals/Snackbar/SnackBarHome.js';
+import { Alert } from 'bootstrap';
 
 function AuthPageNovaConta() {
 
     const navigate = useNavigate();
-    const back = () => navigate("/auth");
+    const back = () => navigate("/identity");
     const [openModalError, setOpenModalError] = useState(false);
-    const { register, control, handleSubmit, reset, trigger, setError } = useForm({
+    const { register, control, handleSubmit, reset, trigger, setError, formState:{errors} } = useForm({
     });
-    const [errorAPI, setErrorAPI] = useState([]);
+    const[mensagensSnackBar, setMensagensSnackBar] = useState();
+    const[openSnackBar, setOpenSnackBar] = useState(false);
+    const[tipoAlertaSnackBar, setTipoAlertaSnackBar] = useState(2);
+
+
+    function  snackBarHandle (tipoAlerta, mensagemSnack){
+        setTipoAlertaSnackBar(tipoAlerta);
+        setMensagensSnackBar(mensagemSnack);
+        setOpenSnackBar(true);
+
+
+    }
 
     async function submitData(data) {
+        setOpenSnackBar(false);
         var response = await identityServiceInstance.CreateUser(data);
 
         if (response.success) {
+            snackBarHandle(1, "Cadastrado com sucesso");
+            reset();
+
+            setTimeout(() =>{
+                back()
+            }, 2000)
         }
         else {
-            setErrorAPI(response);
-            setOpenModalError(true);
+            snackBarHandle(0, response.errors);
+   
         }
+
     }
 
     return (
@@ -45,13 +66,13 @@ function AuthPageNovaConta() {
             <form className="flex 
             flex-col
             h-[350px]
-            justify-center "
-
+            justify-center"
+          
                 onSubmit={handleSubmit(data => submitData(data))}>
                 <ul className="flex flex-col p-0">
-
                     <div class="w-full 
                     max-w-sm
+                    mb-1
                     min-w-[200px]">
 
                         <input class="w-full
@@ -71,12 +92,21 @@ function AuthPageNovaConta() {
                          hover:border-slate-300
                          h-[30px] " placeholder="Nome..."
                             type='text'
+                            aria-invalid={errors.name ? "true" : "false"}
                             {...register("nome", { required: "Nome é obrigatório." })} // custom message
                         />
+
+                   
+                        {errors.nome && errors.nome.type === "required" &&
+                        (() =>{ snackBarHandle(1, ["teste"])})
+                        
+                        }
+                    
 
                     </div>
                     <div class="w-full 
                     max-w-sm
+                    mb-1
                     min-w-[200px]">
 
                         <input class="w-full
@@ -104,7 +134,7 @@ function AuthPageNovaConta() {
                     <div class="w-full 
                     max-w-sm
                     min-w-[200px]
-                    mb-2">
+                    mb-1">
 
                         <input class="w-full 
                         bg-transparent 
@@ -197,21 +227,11 @@ function AuthPageNovaConta() {
             </form>
 
             <Footer />
-            <div className='flex top-0 flex-col absolute '>
 
-                {openModalError &&
-
-
-                   errorAPI.errors.map((item, index) => {
-                    console.log(item)
-                        return ( <div key={index} > <Snackbar open={ openModalError } message={item} timeOut={(index == 0 ? 1 : index + 1) * 2000} /></div>)
-                    })
-
-
-
+                {openSnackBar &&
+                    <SnackbarHome arrayMensagem={mensagensSnackBar}  tipoAlerta={tipoAlertaSnackBar}/>
 
                 }
-            </div>
 
 
             {/* {openModalError && <ModalErrorCreateUser mensagensError={errorAPI}/>} */}

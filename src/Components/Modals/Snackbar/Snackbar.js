@@ -1,26 +1,29 @@
+import { IoIosClose } from "react-icons/io";
 import { useEffect, useState } from "react"
 
 
-export default function Snackbar({ message, timeOut, open }) {
-    const [cssTransition, setcssTransition] = useState('ml-0')
-    const [openModalError, setOpenModalError] = useState(false);
+export default function Snackbar({ message, timeOut, open, tipoAlerta }) {
+    const [cssTransition, setcssTransition] = useState(open? 'visibility' : 'hidden')
+    const [openSnackBar, setOpenSnackBar] = useState(false);
 
     const [openSnack, setOpenSnack] = useState(open);
 
     useEffect(() => {
-        setTimeout(() => {
-            if (openSnack) {
-                setcssTransition("vibility")
 
-                setTimeout(() => {
-                    setOpenSnack(false);
-                    setcssTransition("hidden");
-                }, timeOut + 1000)
-            }
+        if(openSnack){
+            setcssTransition("visibility")
+
+        }else{
+        setcssTransition("hidden")
+
+        }
+
+        setTimeout(() => {
+                setcssTransition("hidden");
+                setOpenSnackBar(false);
 
         }, timeOut);
 
-        setOpenModalError(false);
 
     }, [])
 
@@ -30,21 +33,33 @@ export default function Snackbar({ message, timeOut, open }) {
         <div className={`
     flex 
     ${cssTransition}
-     top-0
       mb-1
-       text-center
       transition-all
+       ease-in-out
        duration-1000
-         ease-in-out
     text-white  
     justify-center 
     items-center  
-    bg-gray-600 
+      text-[10pt]
+    ${tipoAlerta === 0 ? "bg-red-600" : tipoAlerta === 1 ? "bg-green-700" :
+
+                "bg-gray-600"
+            } 
     p-1 
     rounded-sm 
     shadow-md 
     w-full 
     h-[50px]  `}>
-            {message}
+        <span className="w-full">
+        {message}
+
+        </span>
+
+
+<div onClick={() => setcssTransition('hidden')} 
+            className=" cursor-pointer  right-0 top-0">
+<IoIosClose size={25}/>
+            </div>
+
         </div>)
 }
